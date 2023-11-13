@@ -1,19 +1,16 @@
 <template>
   <div class="container">
-
     <!-- Opcje wczytania dla pliku CSV -->
     <h2>Wczytaj plik CSV</h2>
     <input type="file" @change="handleFileChange" accept=".csv" />
     <br />
     <br />
-     <!-- <h2>Wczytaj plik z danymi CSV</h2>
+    <!-- <h2>Wczytaj plik z danymi CSV</h2>
     <input type="file" @change="handleFileChange" accept=".csv, .xlsm" /> -->
     <h2>Wczytaj plik allegro XLSM</h2>
     <input type="file" @change="handleFileChangeAllegro" accept=".xlsm" />
     <br />
     <br />
-
-    
 
     <button @click="addNewRowsToAllegro">Uzupełnij plik Allegro danymi z CSV</button>
 
@@ -24,11 +21,11 @@
         <div v-for="(cell, cellIndex) in row" :key="cellIndex" class="excel-cell">
           {{ cell }}
         </div>
-        <br>
-        <br>
-        <br>
+        <br />
+        <br />
+        <br />
       </div>
-         <!-- Wyświetl dane z pierwszego pliku -->
+      <!-- Wyświetl dane z pierwszego pliku -->
       <div v-for="(row, rowIndex) in fileMatrix" :key="rowIndex" class="excel-row">
         <div class="excel-cell row-number">{{ rowIndex + 1 }}</div>
         <div v-for="(cell, cellIndex) in row" :key="cellIndex" class="excel-cell">
@@ -47,9 +44,8 @@ const workbook = ref(null); // Przechowuj odniesienie do całego skoroszytu
 const worksheet = ref([]); // Przechowuj dane arkusza jako tablicę
 
 const fileMatrix = ref([]);
-const fileContent = ref('');
+const fileContent = ref("");
 const fileRows = ref([]);
-
 
 const handleFileChange = (event) => {
   const selectedFile = event.target.files[0];
@@ -57,13 +53,12 @@ const handleFileChange = (event) => {
 
   reader.onload = (e) => {
     fileContent.value = e.target.result;
-    fileRows.value = e.target.result.split('\n');
-    fileMatrix.value = fileRows.value.map(row => row.split(';')); 
+    fileRows.value = e.target.result.split("\n");
+    fileMatrix.value = fileRows.value.map((row) => row.split(";"));
     console.log(fileMatrix.value);
   };
-  reader.readAsText(selectedFile, 'UTF-8');
+  reader.readAsText(selectedFile, "UTF-8");
 };
-
 
 // Odczytaj plik i zaktualizuj dane arkusza
 const handleFileChangeAllegro = (event) => {
@@ -112,26 +107,34 @@ const addNewRowsToAllegro = async () => {
   // const newRowData = ["Wartość 1", "Wartość 2", "Wartość 3", "", "" , "Wartość 4"];
   // loadedWorksheet.addRow(newRowData);
   // loadedWorksheet.getRow(100).getCell(2).value = "Wartość w wierszu 100 i komórce 2";
-    let i = 6; // Zacznij od wiersza 5 w loadedWorksheet
-    // Pomiń pierwszy wiersz (nagłówek) rozpoczynając iterację od indeksu 1
-    fileMatrix.value.forEach((rowArray, index) => {
-      if (index > 2 && i < 200) { // Sprawdź, czy nie jest to nagłówek oraz czy nie przekraczamy 200 wierszy
-        loadedWorksheet.addRow([]); // Dodaj pusty wiersz
-        loadedWorksheet.getRow(i).getCell(9).value = rowArray[0]; // Numer Katalogowy
-        // loadedWorksheet.getRow(i).getCell(9).value = rowArray[1]; // Numer Oryginalny
-        loadedWorksheet.getRow(i).getCell(15).value = rowArray[2]; // Nazwa
-        loadedWorksheet.getRow(i).getCell(17).value = rowArray[3]; // Opis
-        loadedWorksheet.getRow(i).getCell(11).value = rowArray[4]; // Kategoria
-        // loadedWorksheet.getRow(i).getCell(11).value = rowArray[5]; // Firma
-        // loadedWorksheet.getRow(i).getCell(11).value = rowArray[6]; // Dostępność
-        loadedWorksheet.getRow(i).getCell(14).value = rowArray[7]; // Cena netto
-        loadedWorksheet.getRow(i).getCell(16).value = rowArray[8]; // Obraz
-        loadedWorksheet.getRow(i).getCell(13).value = rowArray[9]; // Ilość w magazynie
-        // Dodaj tutaj kolejne instrukcje ustawiające wartości komórek, jeśli to konieczne
-        console.log(`Dodano wiersz ${i} z danych CSV do arkusza XLSM.`);
-        i += 1; // Zwiększ numer wiersza dla następnej iteracji
+  let i = 6; // Zacznij od wiersza 5 w loadedWorksheet
+  // Pomiń pierwszy wiersz (nagłówek) rozpoczynając iterację od indeksu 1
+  fileMatrix.value.forEach((rowArray, index) => {
+    if (index > 2 && i < 200) {
+      loadedWorksheet.addRow([]); // Dodaj pusty wiersz
+      loadedWorksheet.getRow(i).getCell(9).value = rowArray[0]; // Numer Katalogowy
+      loadedWorksheet.getRow(i).getCell(10).value = "Narzędzia ogrodnicze"; // Kategoria główna
+      loadedWorksheet.getRow(i).getCell(11).value = rowArray[4]; // Kategoria
+      loadedWorksheet.getRow(i).getCell(15).value = rowArray[2]; // Nazwa
+      loadedWorksheet.getRow(i).getCell(17).value = "<p>WYSOKIEJ KLASY ZAMIENNIK</p>" + rowArray[3]; // Opis
+      loadedWorksheet.getRow(i).getCell(20).value = 0 // Adres 1
+      loadedWorksheet.getRow(i).getCell(21).value = 'lubelskie' // Adres 2
+      loadedWorksheet.getRow(i).getCell(22).value = '22-100' // Adres 3
+      loadedWorksheet.getRow(i).getCell(23).value = 'Chełm' // Adres 4
+      loadedWorksheet.getRow(i).getCell(29).value = "Reklamacje (id: 915ae1a2-62c0-4e30-bed7-9a088e57104a)m" // Adres 4
+      loadedWorksheet.getRow(i).getCell(14).value = rowArray[7]; // Cena netto
+      loadedWorksheet.getRow(i).getCell(16).value = "https://gardenparts.pl" + rowArray[8]; // Obraz
+      console.log(rowArray[9])
+      console.log(rowArray[9].trim().toLowerCase() === 'niedostępny')
+
+      if (rowArray[9].trim().toLowerCase() === 'niedostępny') {
+        loadedWorksheet.getRow(i).getCell(13).value = 0;
+      } else {
+        loadedWorksheet.getRow(i).getCell(13).value = 100;
       }
-    });
+      i += 1; // Zwiększ numer wiersza dla następnej iteracji
+    }
+  });
 
   // Zapisz zmiany i wygeneruj nowy plik do pobrania
   try {
@@ -142,13 +145,13 @@ const addNewRowsToAllegro = async () => {
     const url = URL.createObjectURL(blob);
 
     // Tworzenie elementu linku do pobrania pliku
-  const downloadLink = document.createElement('a');
-  downloadLink.href = url;
-  downloadLink.download = "zmodyfikowany_plik.xlsm"; // Ustawienie nazwy pliku z rozszerzeniem .xlsm
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  document.body.removeChild(downloadLink);
-  URL.revokeObjectURL(url);
+    const downloadLink = document.createElement("a");
+    downloadLink.href = url;
+    downloadLink.download = "zmodyfikowany_plik.xlsm"; // Ustawienie nazwy pliku z rozszerzeniem .xlsm
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(url);
 
     console.log("Plik został zaktualizowany i jest gotowy do pobrania.");
   } catch (error) {
