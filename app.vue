@@ -110,7 +110,7 @@ const addNewRowsToAllegro = async () => {
   let i = 6; // Zacznij od wiersza 5 w loadedWorksheet
   // Pomiń pierwszy wiersz (nagłówek) rozpoczynając iterację od indeksu 1
   fileMatrix.value.forEach((rowArray, index) => {
-    if (index > 2 && i < 200) {
+    if (index > 2 && i < fileMatrix.value.length) {
       loadedWorksheet.addRow([]); // Dodaj pusty wiersz
       loadedWorksheet.getRow(i).getCell(9).value = rowArray[0]; // Numer Katalogowy
       loadedWorksheet.getRow(i).getCell(10).value = "Narzędzia ogrodnicze"; // Kategoria główna
@@ -122,13 +122,13 @@ const addNewRowsToAllegro = async () => {
       loadedWorksheet.getRow(i).getCell(22).value = '22-100' // Adres 3
       loadedWorksheet.getRow(i).getCell(23).value = 'Chełm' // Adres 4
       loadedWorksheet.getRow(i).getCell(29).value = "Reklamacje (id: 915ae1a2-62c0-4e30-bed7-9a088e57104a)m" // Adres 4
-      loadedWorksheet.getRow(i).getCell(14).value = rowArray[7]; // Cena netto
-      loadedWorksheet.getRow(i).getCell(16).value = "https://gardenparts.pl" + rowArray[8]; // Obraz
-      console.log(rowArray[9])
-      console.log(rowArray[9].trim().toLowerCase() === 'niedostępny')
+      loadedWorksheet.getRow(i).getCell(14).value = parseFloat(rowArray[7].replace(',', '.')) * 2; // Cena netto
+      // loadedWorksheet.getRow(i).getCell(16).value = "https://gardenparts.pl" + rowArray[8]; // Obraz
+      loadedWorksheet.getRow(i).getCell(16).value = rowArray[8].split(" i ").map(link => "https://gardenparts.pl" + link).join("|"); // Obraz
+      // console.log(rowArray[9].trim().toLowerCase() === 'niedostępny')
 
       if (rowArray[9].trim().toLowerCase() === 'niedostępny') {
-        loadedWorksheet.getRow(i).getCell(13).value = 0;
+        loadedWorksheet.getRow(i).getCell(13).value = 1;
       } else {
         loadedWorksheet.getRow(i).getCell(13).value = 100;
       }
